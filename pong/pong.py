@@ -1,0 +1,153 @@
+import pygame
+from pygame.locals import *
+from sys import exit
+from colors import white, black
+from random import randint, choice
+import os
+
+root = os.path.dirname(__file__)  
+
+# Constantes do jogo
+LARGURA = 980
+ALTURA = 560
+FPS = 60
+VEL = 10
+TAM_BASE = 16
+
+# Iniciando Pygame
+pygame.init()
+pygame.mixer.init()
+
+paddle_sound = pygame.mixer.Sound(os.path.join(root, 'pong-paddle.wav'))
+score_sound = pygame.mixer.Sound(os.path.join(root, 'pong-score.wav'))
+wall_sound = pygame.mixer.Sound(os.path.join(root, 'pong-wall.wav'))
+
+FONTE = pygame.font.SysFont('consolas', 60, False, False)
+
+tela = pygame.display.set_mode((LARGURA, ALTURA))
+pygame.display.set_caption('Pong')
+
+
+# Funções
+def desenha_campo():
+    linha_x = LARGURA // 2 - TAM_BASE // 2
+    linha_y = TAM_BASE
+    while linha_y < ALTURA - TAM_BASE:
+        pygame.draw.rect(tela, white, (linha_x, linha_y, TAM_BASE, TAM_BASE))
+        linha_y += TAM_BASE * 2
+
+
+def desenha_pontuacao(pontos_p1, pontos_p2):
+    for i in range(2):
+        if i == 0:
+            texto_formatado = FONTE.render(pontos_p1, True, white)
+            rect_texto = texto_formatado.get_rect()
+            tela.blit(texto_formatado, (LARGURA // 2 - TAM_BASE // 2 - rect_texto.width - 60, 40))
+        else:
+            texto_formatado = FONTE.render(pontos_p2, True, white)
+            rect_texto = texto_formatado.get_rect()
+            tela.blit(texto_formatado, (LARGURA // 2 + TAM_BASE // 2 + 60, 40))
+
+
+def main():
+    global VEL
+    # Jogador
+    jogador_largura = TAM_BASE
+    jogador_altura = TAM_BASE * 4
+    p1_x = TAM_BASE
+    p2_x = LARGURA - p1_x - jogador_largura
+    p1_y = p2_y = ALTURA // 2 - jogador_altura // 2
+    pontos_p1 = pontos_p2 = 0
+
+    # Bolinha
+    tam_bolinha = TAM_BASE
+    bolinha_x = LARGURA // 2 - tam_bolinha // 2
+    bolinha_y = ALTURA // 2 - tam_bolinha // 2
+    bolinha_vel_x = bolinha_vel_y = 4
+
+    clock = pygame.time.Clock()
+    while True:  # Loop principal
+        clock.tick(FPS)
+        tela.fill(black)
+
+        desenha_campo()
+        desenha_pontuacao(str(pontos_p1), str(pontos_p2))
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            
+            # if event.type == pygame.KEYDOWN: # Assim não funciona apertar e segurar
+            #     if event.key == pygame.K_w:
+            #         print('W')
+        
+        # Movimento jogadores
+        keys_pressed = pygame.key.get_pressed()
+        if keys_pressed[pygame.K_w] and p1_y >= abs(VEL) - jogador_altura:
+            p1_y -= VEL
+        if keys_pressed[pygame.K_s] and p1_y <= ALTURA - abs(VEL):
+            p1_y += VEL
+        if keys_pressed[pygame.K_UP] and p2_y >= abs(VEL) - jogador_altura:
+            p2_y -= VEL
+        if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL):
+            p2_y += VEL
+
+        if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
+            main()
+
+        bolinha = pygame.draw.rect(tela, white, (bolinha_x, bolinha_y, tam_bolinha, tam_bolinha))
+        
+        p1 = pygame.draw.rect(tela, white, (p1_x, p1_y, jogador_largura, jogador_altura))
+        p2 = pygame.draw.rect(tela, white, (p2_x, p2_y, jogador_largura, jogador_altura))
+
+        # Colisão bolinha com jogadores
+        if p1.colliderect(bolinha):
+            bolinha_vel_x *= -1
+            bolinha_vel_x += 1
+            if bolinha_vel_y < 0:
+                bolinha_vel_y -= 1
+            else:
+                bolinha_vel_y += 1
+            paddle_sound.play()
+
+        elif p2.colliderect(bolinha):
+            bolinha_vel_x *= -1
+            bolinha_vel_x -= 1
+            if bolinha_vel_y < 0:
+                bolinha_vel_y -= 1
+            else:
+                bolinha_vel_y += 1
+            paddle_sound.play()
+
+        # Colisão bolinha com tela
+        elif bolinha_y <= 0 or bolinha_y >= ALTURA - tam_bolinha:
+            bolinha_vel_y *= -1
+            wall_sound.play()
+        
+        
+        # Movimentando bolinha
+        bolinha_x += bolinha_vel_x
+        bolinha_y += bolinha_vel_y
+
+        marcou = False
+        # Contabilizando pontos
+        if bolinha_x < 0:
+            pontos_p2 += 1
+            marcou = True
+            score_sound.play()
+        elif bolinha_x + tam_bolinha > LARGURA:
+            score_sound.play()
+            pontos_p1 += 1
+            marcou = True
+        
+        if marcou:
+            bolinha_x = LARGURA // 2 - tam_bolinha // 2
+            bolinha_y = ALTURA // 2 - tam_bolinha // 2
+            bolinha_vel_x = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
+            bolinha_vel_y = (randint(100, 500) / 100) * choice([-1, 1])  # Velocidade de 1 a 5
+            
+        pygame.display.update()
+
+if __name__ == "__main__":
+    main()
