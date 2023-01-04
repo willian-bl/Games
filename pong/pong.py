@@ -49,6 +49,29 @@ def desenha_pontuacao(pontos_p1, pontos_p2):
             tela.blit(texto_formatado, (LARGURA // 2 + TAM_BASE // 2 + 60, 40))
 
 
+def game_over(vencedor):
+    tela.fill(black)
+
+    texto_formatado = FONTE.render(f'{vencedor} wins!', True, white)
+    rect_texto1 = texto_formatado.get_rect()
+    tela.blit(texto_formatado, (LARGURA // 2 - rect_texto1.width // 2, 40))
+    
+    fonte2 = pygame.font.SysFont('consolas', 40, False, False)
+    texto_formatado = fonte2.render('Press "SPACE" to play again', True, white)
+    rect_texto2 = texto_formatado.get_rect()
+    tela.blit(texto_formatado, (LARGURA // 2 - rect_texto2.width // 2, 40 + rect_texto1.height + 15))
+
+    pygame.display.update()
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                return
+
+
 def main():
     global VEL
     # Jogador
@@ -65,6 +88,7 @@ def main():
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
     bolinha_vel_x = bolinha_vel_y = 4
 
+    vencedor = 0
     clock = pygame.time.Clock()
     while True:  # Loop principal
         clock.tick(FPS)
@@ -93,8 +117,8 @@ def main():
         if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL):
             p2_y += VEL
 
-        if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
-            main()
+        # if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
+        #     main()
 
         bolinha = pygame.draw.rect(tela, white, (bolinha_x, bolinha_y, tam_bolinha, tam_bolinha))
         
@@ -125,7 +149,6 @@ def main():
             bolinha_vel_y *= -1
             wall_sound.play()
         
-        
         # Movimentando bolinha
         bolinha_x += bolinha_vel_x
         bolinha_y += bolinha_vel_y
@@ -146,7 +169,17 @@ def main():
             bolinha_y = ALTURA // 2 - tam_bolinha // 2
             bolinha_vel_x = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
             bolinha_vel_y = (randint(100, 500) / 100) * choice([-1, 1])  # Velocidade de 1 a 5
-            
+        
+        # Game over
+        if pontos_p1 == 10:
+            vencedor = '1'
+        elif pontos_p2 == 10:
+            vencedor = '2'
+
+        if vencedor:
+            game_over(vencedor=f'Player {vencedor}')
+            main()
+
         pygame.display.update()
 
 if __name__ == "__main__":
