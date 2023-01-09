@@ -22,7 +22,6 @@ LARGURA = 480
 ALTURA = 520
 
 TELA = pygame.display.set_mode((LARGURA, ALTURA))
-pygame.display.set_caption('Snake Game - Jogo da Cobrinha')
 
 CLOCK = pygame.time.Clock()
 
@@ -45,6 +44,10 @@ som_maca = pygame.mixer.Sound(os.path.join(root, 'arquivos/apple_pickup.wav'))
 som_gameover = pygame.mixer.Sound(os.path.join(root, 'arquivos/death.wav'))
 som_speedup = pygame.mixer.Sound(os.path.join(root, 'arquivos/speed_up.wav'))
 musica_de_fundo = pygame.mixer.music.load(os.path.join(root, 'arquivos/Free 8-bit loop.wav'))
+icone = pygame.image.load(os.path.join(root, 'arquivos/snake-icon.png'))
+
+pygame.display.set_caption('Snake Game - Jogo da Cobrinha')
+pygame.display.set_icon(icone)
 
 #  -------------------- Definindo Funções -----------------------
 
@@ -206,3 +209,6 @@ def main():
 #  --------------------------- Iniciando o jogo -------------------------
 if __name__ == '__main__':
     main()
+
+# pyi-makespec.exe --onefile --icon="arquivos/snake-icon.ico" --noconsole .\jogo_cobrinha.py
+# pyinstaller.exe .\jogo_cobrinha.spec

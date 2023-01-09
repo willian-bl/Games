@@ -21,11 +21,13 @@ pygame.mixer.init()
 paddle_sound = pygame.mixer.Sound(os.path.join(root, 'pong-paddle.wav'))
 score_sound = pygame.mixer.Sound(os.path.join(root, 'pong-score.wav'))
 wall_sound = pygame.mixer.Sound(os.path.join(root, 'pong-wall.wav'))
+icon = pygame.image.load(os.path.join(root, 'pong-icon.png'))
 
 FONTE = pygame.font.SysFont('consolas', 60, False, False)
 
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption('Pong')
+pygame.display.set_icon(icon)
 
 
 # Funções
@@ -57,7 +59,7 @@ def game_over(vencedor):
     tela.blit(texto_formatado, (LARGURA // 2 - rect_texto1.width // 2, 40))
     
     fonte2 = pygame.font.SysFont('consolas', 40, False, False)
-    texto_formatado = fonte2.render('Press "SPACE" to play again', True, white)
+    texto_formatado = fonte2.render('Press SPACEBAR to play again', True, white)
     rect_texto2 = texto_formatado.get_rect()
     tela.blit(texto_formatado, (LARGURA // 2 - rect_texto2.width // 2, 40 + rect_texto1.height + 15))
 
@@ -184,3 +186,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# pyi-makespec.exe --onefile --icon="pong-icon.ico" --noconsole .\pong.py
+# pyinstaller.exe .\pong.spec
