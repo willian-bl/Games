@@ -210,5 +210,5 @@ def main():
 if __name__ == '__main__':
     main()
 
-# pyi-makespec.exe --onefile --icon="arquivos/snake-icon.ico" --noconsole .\jogo_cobrinha.py
+# pyi-makespec.exe --onefile --icon="img/snake-icon.ico" --noconsole .\jogo_cobrinha.py
 # pyinstaller.exe .\jogo_cobrinha.spec

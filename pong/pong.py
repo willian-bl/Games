@@ -88,7 +88,7 @@ def main():
     tam_bolinha = TAM_BASE
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    bolinha_vel_x = bolinha_vel_y = 4
+    bolinha_vel_x = bolinha_vel_y = 8
 
     vencedor = 0
     clock = pygame.time.Clock()
@@ -128,7 +128,8 @@ def main():
         p2 = pygame.draw.rect(tela, white, (p2_x, p2_y, jogador_largura, jogador_altura))
 
         # Colisão bolinha com jogadores
-        if p1.colliderect(bolinha):
+        
+        if p1.colliderect(bolinha) and bolinha_vel_x < 0:
             bolinha_vel_x *= -1
             bolinha_vel_x += 1
             if bolinha_vel_y < 0:
@@ -136,8 +137,10 @@ def main():
             else:
                 bolinha_vel_y += 1
             paddle_sound.play()
+            # print(p1.collidepoint(bolinha_x, bolinha_y))
+            # print(p1.collidelistall(bolinha))
 
-        elif p2.colliderect(bolinha):
+        elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
             bolinha_vel_x *= -1
             bolinha_vel_x -= 1
             if bolinha_vel_y < 0:
@@ -187,5 +190,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# pyi-makespec.exe --onefile --icon="pong-icon.ico" --noconsole .\pong.py
+# pyi-makespec.exe --onefile --icon="img/pong-icon.ico" --noconsole .\pong.py
 # pyinstaller.exe .\pong.spec
