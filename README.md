@@ -23,3 +23,6 @@ Na faculdade e por conta já estudei vários conceitos básicos da programação
 Então, unindo o útil com o agradável, tive a ideia de iniciar um projeto onde usaria a linguagem Python e a biblioteca Pygame para refazer jogos clássicos,
 como o Snake Game, Pong, Tetris etc. e, assim, treinar minha lógica de programação e o uso do Python de uma maneira mais atrativa, por assim dizer. 
 ~Sem contar que sempre tive vontade de fazer isso kkkk~
+
+## Referências
+- Curso Pygame 2020 - Canal João Tinti: https://youtube.com/playlist?list=PLJ8PYFcmwFOxtJS4EZTGEPxMEo4YdbxdQ (Referência para o jogo da cobrinha)
