@@ -3,8 +3,8 @@
 
 block_cipher = None
 
-added_files = [('arquivos/*.wav', 'arquivos/'),
-               ('arquivos/snake-icon.png', 'arquivos/')
+added_files = [('audio/*.wav', 'audio/'),
+               ('img/snake-icon.png', 'img/')
                ]
 
 a = Analysis(
@@ -44,5 +44,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['arquivos/snake-icon.ico'],
+    icon=['img/snake-icon.ico'],
 )

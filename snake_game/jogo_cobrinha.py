@@ -40,11 +40,11 @@ FONTE_GAMEOVER = pygame.font.SysFont('impact', 30, False, False)
 
 root = os.path.dirname(__file__)
 
-som_maca = pygame.mixer.Sound(os.path.join(root, 'arquivos/apple_pickup.wav'))
-som_gameover = pygame.mixer.Sound(os.path.join(root, 'arquivos/death.wav'))
-som_speedup = pygame.mixer.Sound(os.path.join(root, 'arquivos/speed_up.wav'))
-musica_de_fundo = pygame.mixer.music.load(os.path.join(root, 'arquivos/Free 8-bit loop.wav'))
-icone = pygame.image.load(os.path.join(root, 'arquivos/snake-icon.png'))
+som_maca = pygame.mixer.Sound(os.path.join(root, 'audio/apple_pickup.wav'))
+som_gameover = pygame.mixer.Sound(os.path.join(root, 'audio/death.wav'))
+som_speedup = pygame.mixer.Sound(os.path.join(root, 'audio/speed_up.wav'))
+musica_de_fundo = pygame.mixer.music.load(os.path.join(root, 'audio/Free 8-bit loop.wav'))
+icone = pygame.image.load(os.path.join(root, 'img/snake-icon.png'))
 
 pygame.display.set_caption('Snake Game - Jogo da Cobrinha')
 pygame.display.set_icon(icone)

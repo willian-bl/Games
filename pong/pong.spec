@@ -3,8 +3,8 @@
 
 block_cipher = None
 
-added_files = [('*.wav', '.'),
-               ('pong-icon.png', '.')
+added_files = [('audio/', 'audio/'),
+               ('img/pong-icon.png', 'img/')
                ]
 
 a = Analysis(
@@ -44,5 +44,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['pong-icon.ico'],
+    icon=['img/pong-icon.ico'],
 )

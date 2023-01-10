@@ -18,10 +18,10 @@ TAM_BASE = 16
 pygame.init()
 pygame.mixer.init()
 
-paddle_sound = pygame.mixer.Sound(os.path.join(root, 'pong-paddle.wav'))
-score_sound = pygame.mixer.Sound(os.path.join(root, 'pong-score.wav'))
-wall_sound = pygame.mixer.Sound(os.path.join(root, 'pong-wall.wav'))
-icon = pygame.image.load(os.path.join(root, 'pong-icon.png'))
+paddle_sound = pygame.mixer.Sound(os.path.join(root, 'audio/pong-paddle.wav'))
+score_sound = pygame.mixer.Sound(os.path.join(root, 'audio/pong-score.wav'))
+wall_sound = pygame.mixer.Sound(os.path.join(root, 'audio/pong-wall.wav'))
+icon = pygame.image.load(os.path.join(root, 'img/pong-icon.png'))
 
 FONTE = pygame.font.SysFont('consolas', 60, False, False)
 
