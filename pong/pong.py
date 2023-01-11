@@ -136,13 +136,29 @@ def main():
         # Colisão bolinha com jogadores
         if p1.colliderect(bolinha) and bolinha_vel_x < 0:
             bolinha_vel_x *= -1
-            bolinha_vel_x += 1
-            if bolinha_vel_y < 0:
-                bolinha_vel_y -= 1
-            else:
-                bolinha_vel_y += 1
+            # bolinha_vel_x += 1
+            # if bolinha_vel_y < 0:
+            #     bolinha_vel_y -= 1
+            # else:
+            #     bolinha_vel_y += 1
             paddle_sound.play()
-            print(p1.collidepoint(bolinha.x, bolinha.y))
+            
+            if keys_pressed[pygame.K_w] and bolinha_vel_y < 0:
+                bolinha_vel_y -= 2
+                bolinha_vel_x -= 2
+            elif bolinha_vel_y < 0:
+                bolinha_vel_y -= 1
+                bolinha_vel_y *= -1
+                bolinha_vel_x -= 1
+            elif keys_pressed[pygame.K_s] and bolinha_vel_y > 0:
+                bolinha_vel_y += 2
+                bolinha_vel_x += 2
+            elif bolinha_vel_y < 0:
+                bolinha_vel_y += 1
+                bolinha_vel_y *= -1
+                bolinha_vel_x += 1
+            
+            print(f"p1 - {bolinha_vel_y}")
 
         elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
             bolinha_vel_x *= -1
@@ -152,6 +168,8 @@ def main():
             else:
                 bolinha_vel_y += 1
             paddle_sound.play()
+
+            print(f"p2 - {bolinha_vel_y}")
 
         # Colisão bolinha com tela
         elif bolinha.y <= 0 or bolinha.y >= ALTURA - tam_bolinha:
