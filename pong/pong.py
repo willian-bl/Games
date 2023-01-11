@@ -9,10 +9,10 @@ root = os.path.dirname(__file__)
 
 # Constantes do jogo
 LARGURA = 980
-ALTURA = 560
+ALTURA = 640
 FPS = 60
-VEL = 10
-TAM_BASE = 16
+VEL = 8
+TAM_LINHA = 8
 
 # Iniciando Pygame
 pygame.init()
@@ -32,11 +32,11 @@ pygame.display.set_icon(icon)
 
 # Funções
 def desenha_campo():
-    linha_x = LARGURA // 2 - TAM_BASE // 2
-    linha_y = TAM_BASE
-    while linha_y < ALTURA - TAM_BASE:
-        pygame.draw.rect(tela, white, (linha_x, linha_y, TAM_BASE, TAM_BASE))
-        linha_y += TAM_BASE * 2
+    linha_x = LARGURA // 2 - TAM_LINHA // 2
+    linha_y = TAM_LINHA
+    while linha_y < ALTURA - TAM_LINHA:
+        pygame.draw.rect(tela, white, (linha_x, linha_y, TAM_LINHA, TAM_LINHA))
+        linha_y += TAM_LINHA * 2
 
 
 def desenha_pontuacao(pontos_p1, pontos_p2):
@@ -44,11 +44,11 @@ def desenha_pontuacao(pontos_p1, pontos_p2):
         if i == 0:
             texto_formatado = FONTE.render(pontos_p1, True, white)
             rect_texto = texto_formatado.get_rect()
-            tela.blit(texto_formatado, (LARGURA // 2 - TAM_BASE // 2 - rect_texto.width - 60, 40))
+            tela.blit(texto_formatado, (LARGURA // 2 - 40 // 2 - rect_texto.width - 60, 40))
         else:
             texto_formatado = FONTE.render(pontos_p2, True, white)
             rect_texto = texto_formatado.get_rect()
-            tela.blit(texto_formatado, (LARGURA // 2 + TAM_BASE // 2 + 60, 40))
+            tela.blit(texto_formatado, (LARGURA // 2 + 40 // 2 + 60, 40))
 
 
 def game_over(vencedor):
@@ -77,18 +77,18 @@ def game_over(vencedor):
 def main():
     global VEL
     # Jogador
-    jogador_largura = TAM_BASE
-    jogador_altura = TAM_BASE * 4
-    p1_x = TAM_BASE
+    jogador_largura = 12
+    jogador_altura = 80
+    p1_x = 40
     p2_x = LARGURA - p1_x - jogador_largura
     p1_y = p2_y = ALTURA // 2 - jogador_altura // 2
     pontos_p1 = pontos_p2 = 0
 
     # Bolinha
-    tam_bolinha = TAM_BASE
+    tam_bolinha = 12
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    bolinha_vel_x = bolinha_vel_y = 8
+    bolinha_vel_x = bolinha_vel_y = 4
 
     vencedor = 0
     clock = pygame.time.Clock()
