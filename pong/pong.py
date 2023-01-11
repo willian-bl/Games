@@ -88,9 +88,11 @@ def main():
     tam_bolinha = 12
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    bolinha_vel_x = bolinha_vel_y = 4
+    bolinha_vel_x = vel_x_init = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
+    bolinha_vel_y = vel_y_init = (randint(100, 500) / 100) * choice([-1, 1])  # Velocidade de 1 a 5
 
     vencedor = 0
+    bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
     clock = pygame.time.Clock()
     while True:  # Loop principal
         clock.tick(FPS)
@@ -119,13 +121,13 @@ def main():
         if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL):
             p2_y += VEL
 
-        # if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
-        #     main()
-
-        bolinha = pygame.draw.rect(tela, white, (bolinha_x, bolinha_y, tam_bolinha, tam_bolinha))
+        if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
+            main()
         
         p1 = pygame.draw.rect(tela, white, (p1_x, p1_y, jogador_largura, jogador_altura))
         p2 = pygame.draw.rect(tela, white, (p2_x, p2_y, jogador_largura, jogador_altura))
+
+        pygame.draw.rect(tela, white, bolinha)
 
         # Colisão bolinha com jogadores
         
@@ -137,8 +139,6 @@ def main():
             else:
                 bolinha_vel_y += 1
             paddle_sound.play()
-            # print(p1.collidepoint(bolinha_x, bolinha_y))
-            # print(p1.collidelistall(bolinha))
 
         elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
             bolinha_vel_x *= -1
@@ -150,31 +150,30 @@ def main():
             paddle_sound.play()
 
         # Colisão bolinha com tela
-        elif bolinha_y <= 0 or bolinha_y >= ALTURA - tam_bolinha:
+        elif bolinha.y <= 0 or bolinha.y >= ALTURA - tam_bolinha:
             bolinha_vel_y *= -1
             wall_sound.play()
         
         # Movimentando bolinha
-        bolinha_x += bolinha_vel_x
-        bolinha_y += bolinha_vel_y
+        bolinha.x += bolinha_vel_x
+        bolinha.y += bolinha_vel_y
 
         marcou = False
         # Contabilizando pontos
-        if bolinha_x < 0:
+        if bolinha.x < 0:
             pontos_p2 += 1
             marcou = True
             score_sound.play()
-        elif bolinha_x + tam_bolinha > LARGURA:
+        elif bolinha.x + tam_bolinha > LARGURA:
             score_sound.play()
             pontos_p1 += 1
             marcou = True
         
         if marcou:
-            bolinha_x = LARGURA // 2 - tam_bolinha // 2
-            bolinha_y = ALTURA // 2 - tam_bolinha // 2
-            bolinha_vel_x = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
-            bolinha_vel_y = (randint(100, 500) / 100) * choice([-1, 1])  # Velocidade de 1 a 5
-        
+            bolinha.x = LARGURA // 2 - tam_bolinha // 2
+            bolinha_vel_x = vel_x_init
+            bolinha_vel_y = vel_y_init
+
         # Game over
         if pontos_p1 == 10:
             vencedor = '1'
