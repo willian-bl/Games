@@ -82,7 +82,9 @@ def main():
     p1_x = 40
     p2_x = LARGURA - p1_x - jogador_largura
     p1_y = p2_y = ALTURA // 2 - jogador_altura // 2
-    pontos_p1 = pontos_p2 = 0
+
+    p1 = pygame.Rect(p1_x, p1_y, jogador_largura, jogador_altura)
+    p2 = pygame.Rect(p2_x, p2_y, jogador_largura, jogador_altura)
 
     # Bolinha
     tam_bolinha = 12
@@ -90,9 +92,11 @@ def main():
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
     bolinha_vel_x = vel_x_init = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
     bolinha_vel_y = vel_y_init = (randint(100, 500) / 100) * choice([-1, 1])  # Velocidade de 1 a 5
+    bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
 
     vencedor = 0
-    bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
+    pontos_p1 = pontos_p2 = 0
+
     clock = pygame.time.Clock()
     while True:  # Loop principal
         clock.tick(FPS)
@@ -112,25 +116,24 @@ def main():
         
         # Movimento jogadores
         keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_w] and p1_y >= abs(VEL) - jogador_altura:
-            p1_y -= VEL
-        if keys_pressed[pygame.K_s] and p1_y <= ALTURA - abs(VEL):
-            p1_y += VEL
-        if keys_pressed[pygame.K_UP] and p2_y >= abs(VEL) - jogador_altura:
-            p2_y -= VEL
-        if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL):
-            p2_y += VEL
+        if keys_pressed[pygame.K_w] and p1.y >= abs(VEL) - jogador_altura:
+            p1.y -= VEL
+        if keys_pressed[pygame.K_s] and p1.y <= ALTURA - abs(VEL):
+            p1.y += VEL
+        if keys_pressed[pygame.K_UP] and p2.y >= abs(VEL) - jogador_altura:
+            p2.y -= VEL
+        if keys_pressed[pygame.K_DOWN] and p2.y <= ALTURA - abs(VEL):
+            p2.y += VEL
 
         if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
             main()
         
-        p1 = pygame.draw.rect(tela, white, (p1_x, p1_y, jogador_largura, jogador_altura))
-        p2 = pygame.draw.rect(tela, white, (p2_x, p2_y, jogador_largura, jogador_altura))
-
+        # Desenhando objetos
+        pygame.draw.rect(tela, white, p1)
+        pygame.draw.rect(tela, white, p2)
         pygame.draw.rect(tela, white, bolinha)
 
         # Colisão bolinha com jogadores
-        
         if p1.colliderect(bolinha) and bolinha_vel_x < 0:
             bolinha_vel_x *= -1
             bolinha_vel_x += 1
@@ -139,6 +142,7 @@ def main():
             else:
                 bolinha_vel_y += 1
             paddle_sound.play()
+            print(p1.collidepoint(bolinha.x, bolinha.y))
 
         elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
             bolinha_vel_x *= -1
