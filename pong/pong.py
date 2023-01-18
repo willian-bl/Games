@@ -78,7 +78,7 @@ def main():
     global VEL
     # Jogador
     jogador_largura = 12
-    jogador_altura = 80
+    jogador_altura = 9 * 10
     p1_x = 40
     p2_x = LARGURA - p1_x - jogador_largura
     p1_y = p2_y = ALTURA // 2 - jogador_altura // 2
@@ -90,9 +90,15 @@ def main():
     tam_bolinha = 12
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    bolinha_vel_x = vel_x_init = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
-    bolinha_vel_y = vel_y_init = (randint(100, 500) / 100) * choice([-1, 1])  # Velocidade de 1 a 5
+    # bolinha_vel_x = vel_x_init = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
+    # bolinha_vel_y = vel_y_init = (randint(100, 500) / 100) * choice([-10, 1])  # Velocidade de 1 a 5
+    bolinha_vel = 10
+    vel_x_init = bolinha_vel_x = randint(2, bolinha_vel)  * choice([-1, 1])
+    vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
     bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
+
+    
+    print(bolinha_vel_x, bolinha_vel_y)
 
     vencedor = 0
     pontos_p1 = pontos_p2 = 0
@@ -113,13 +119,18 @@ def main():
             # if event.type == pygame.KEYDOWN: # Assim não funciona apertar e segurar
             #     if event.key == pygame.K_w:
             #         print('W')
+        p1 = []
+        for i in range(9):
+            p1.append(pygame.Rect(p1_x, p1_y + (jogador_altura // 9 * i), jogador_largura, jogador_altura // 9))
+            # print(p1)
+            pygame.draw.rect(tela,(0, 50+i*20, 255 - 20*i), p1[i])
         
         # Movimento jogadores
         keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_w] and p1.y >= abs(VEL) - jogador_altura:
-            p1.y -= VEL
-        if keys_pressed[pygame.K_s] and p1.y <= ALTURA - abs(VEL):
-            p1.y += VEL
+        if keys_pressed[pygame.K_w] and p1_y >= abs(VEL) - jogador_altura:
+            p1_y -= VEL
+        if keys_pressed[pygame.K_s] and p1_y <= ALTURA - abs(VEL):
+            p1_y += VEL
         if keys_pressed[pygame.K_UP] and p2.y >= abs(VEL) - jogador_altura:
             p2.y -= VEL
         if keys_pressed[pygame.K_DOWN] and p2.y <= ALTURA - abs(VEL):
@@ -129,50 +140,51 @@ def main():
             main()
         
         # Desenhando objetos
-        pygame.draw.rect(tela, white, p1)
+        # pygame.draw.rect(tela, white, p1)
         pygame.draw.rect(tela, white, p2)
         pygame.draw.rect(tela, white, bolinha)
 
         # Colisão bolinha com jogadores
-        if p1.colliderect(bolinha) and bolinha_vel_x < 0:
-            bolinha_vel_x *= -1
-            # bolinha_vel_x += 1
-            # if bolinha_vel_y < 0:
-            #     bolinha_vel_y -= 1
-            # else:
-            #     bolinha_vel_y += 1
-            paddle_sound.play()
-            
-            if keys_pressed[pygame.K_w] and bolinha_vel_y < 0:
-                bolinha_vel_y -= 2
-                bolinha_vel_x -= 2
-            elif bolinha_vel_y < 0:
-                bolinha_vel_y -= 1
-                bolinha_vel_y *= -1
+        for segmento in p1:
+            if segmento.colliderect(bolinha) and bolinha_vel_x < 0:
+                bolinha_vel_x *= -1
+                # bolinha_vel_x += 1
+                # if bolinha_vel_y < 0:
+                #     bolinha_vel_y -= 1
+                # else:
+                #     bolinha_vel_y += 1
+                paddle_sound.play()
+                
+                if keys_pressed[pygame.K_w] and bolinha_vel_y < 0:
+                    bolinha_vel_y -= 2
+                    bolinha_vel_x -= 2
+                elif bolinha_vel_y < 0:
+                    bolinha_vel_y -= 1
+                    bolinha_vel_y *= -1
+                    bolinha_vel_x -= 1
+                elif keys_pressed[pygame.K_s] and bolinha_vel_y > 0:
+                    bolinha_vel_y += 2
+                    bolinha_vel_x += 2
+                elif bolinha_vel_y < 0:
+                    bolinha_vel_y += 1
+                    bolinha_vel_y *= -1
+                    bolinha_vel_x += 1
+                
+                # print(f"p1 - {bolinha_vel_y}")
+
+            elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
+                bolinha_vel_x *= -1
                 bolinha_vel_x -= 1
-            elif keys_pressed[pygame.K_s] and bolinha_vel_y > 0:
-                bolinha_vel_y += 2
-                bolinha_vel_x += 2
-            elif bolinha_vel_y < 0:
-                bolinha_vel_y += 1
-                bolinha_vel_y *= -1
-                bolinha_vel_x += 1
-            
-            print(f"p1 - {bolinha_vel_y}")
+                if bolinha_vel_y < 0:
+                    bolinha_vel_y -= 1
+                else:
+                    bolinha_vel_y += 1
+                paddle_sound.play()
 
-        elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
-            bolinha_vel_x *= -1
-            bolinha_vel_x -= 1
-            if bolinha_vel_y < 0:
-                bolinha_vel_y -= 1
-            else:
-                bolinha_vel_y += 1
-            paddle_sound.play()
-
-            print(f"p2 - {bolinha_vel_y}")
+            # print(f"p2 - {bolinha_vel_y}")
 
         # Colisão bolinha com tela
-        elif bolinha.y <= 0 or bolinha.y >= ALTURA - tam_bolinha:
+        if bolinha.y <= 0 or bolinha.y >= ALTURA - tam_bolinha:
             bolinha_vel_y *= -1
             wall_sound.play()
         
