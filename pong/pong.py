@@ -90,11 +90,11 @@ def main():
     tam_bolinha = 12
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    # bolinha_vel_x = vel_x_init = (randint(300, 600) / 100) * choice([-1, 1])  # Velocidade de 3 a 6
-    # bolinha_vel_y = vel_y_init = (randint(100, 500) / 100) * choice([-10, 1])  # Velocidade de 1 a 5
     bolinha_vel = 10
-    vel_x_init = bolinha_vel_x = randint(2, bolinha_vel)  * choice([-1, 1])
-    vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
+    # vel_x_init = bolinha_vel_x = randint(2, bolinha_vel)  * choice([-1, 1])
+    # vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
+    vel_x_init = bolinha_vel_x = -10
+    vel_y_init = bolinha_vel_y = 0
     bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
 
     
@@ -145,41 +145,63 @@ def main():
         pygame.draw.rect(tela, white, bolinha)
 
         # Colisão bolinha com jogadores
-        for segmento in p1:
-            if segmento.colliderect(bolinha) and bolinha_vel_x < 0:
-                bolinha_vel_x *= -1
-                # bolinha_vel_x += 1
-                # if bolinha_vel_y < 0:
-                #     bolinha_vel_y -= 1
-                # else:
-                #     bolinha_vel_y += 1
+        # for i in range(9):
+        #     if bolinha_vel_x < 0:
+        #         if p1[i].colliderect(bolinha):
+        #             bolinha_vel_x *= -1
+        #             paddle_sound.play()
+        if bolinha_vel_x < 0:
+            if p1[0].colliderect(bolinha):
+                bolinha_vel_x = 2
+                bolinha_vel_y = -8
                 paddle_sound.play()
-                
-                if keys_pressed[pygame.K_w] and bolinha_vel_y < 0:
-                    bolinha_vel_y -= 2
-                    bolinha_vel_x -= 2
-                elif bolinha_vel_y < 0:
-                    bolinha_vel_y -= 1
-                    bolinha_vel_y *= -1
-                    bolinha_vel_x -= 1
-                elif keys_pressed[pygame.K_s] and bolinha_vel_y > 0:
-                    bolinha_vel_y += 2
-                    bolinha_vel_x += 2
-                elif bolinha_vel_y < 0:
-                    bolinha_vel_y += 1
-                    bolinha_vel_y *= -1
-                    bolinha_vel_x += 1
-                
-                # print(f"p1 - {bolinha_vel_y}")
+            elif p1[1].colliderect(bolinha):
+                bolinha_vel_x = 4
+                bolinha_vel_y = -6
+                paddle_sound.play()
+            elif p1[2].colliderect(bolinha):
+                bolinha_vel_x = 6
+                bolinha_vel_y = -4
+                paddle_sound.play()
+            elif p1[3].colliderect(bolinha):
+                bolinha_vel_x = 8
+                bolinha_vel_y = -2
+                paddle_sound.play()
+            elif p1[4].colliderect(bolinha):
+                bolinha_vel_x = 10
+                bolinha_vel_y = 0
+                paddle_sound.play()
+            elif p1[5].colliderect(bolinha):
+                bolinha_vel_x = -8
+                bolinha_vel_y = 2
+                bolinha_vel_x *= -1
+                paddle_sound.play()
+            elif p1[6].colliderect(bolinha):
+                bolinha_vel_x = -6
+                bolinha_vel_y = 4
+                bolinha_vel_x *= -1
+                paddle_sound.play()
+            elif p1[7].colliderect(bolinha):
+                bolinha_vel_x = -4
+                bolinha_vel_y = 6
+                bolinha_vel_x *= -1
+                paddle_sound.play()
+            elif p1[8].colliderect(bolinha):
+                bolinha_vel_x = -2
+                bolinha_vel_y = 8
+                bolinha_vel_x *= -1
+                paddle_sound.play()
 
-            elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
-                bolinha_vel_x *= -1
-                bolinha_vel_x -= 1
-                if bolinha_vel_y < 0:
-                    bolinha_vel_y -= 1
-                else:
-                    bolinha_vel_y += 1
-                paddle_sound.play()
+            print(bolinha_vel_x, bolinha_vel_y)
+
+        elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
+            bolinha_vel_x *= -1
+            bolinha_vel_x -= 1
+            if bolinha_vel_y < 0:
+                bolinha_vel_y -= 1
+            else:
+                bolinha_vel_y += 1
+            paddle_sound.play()
 
             # print(f"p2 - {bolinha_vel_y}")
 
