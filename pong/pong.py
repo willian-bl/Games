@@ -39,6 +39,15 @@ def desenha_campo():
         linha_y += TAM_LINHA * 2
 
 
+def desenha_jogador(jog_x, jog_y):
+    jog = []
+    for i in range(9):
+        jog.append(pygame.Rect(jog_x, jog_y + (jogador_altura // 9 * i), jogador_largura, jogador_altura // 9))
+        # print(p1)
+        pygame.draw.rect(tela,(0, 50+i*20, 255 - 20*i), jog[i])
+    return jog
+
+
 def desenha_pontuacao(pontos_p1, pontos_p2):
     for i in range(2):
         if i == 0:
@@ -75,7 +84,7 @@ def game_over(vencedor):
 
 
 def main():
-    global VEL
+    global VEL, jogador_altura, jogador_largura
     # Jogador
     jogador_largura = 12
     jogador_altura = 9 * 10
@@ -119,11 +128,11 @@ def main():
             # if event.type == pygame.KEYDOWN: # Assim não funciona apertar e segurar
             #     if event.key == pygame.K_w:
             #         print('W')
-        p1 = []
-        for i in range(9):
-            p1.append(pygame.Rect(p1_x, p1_y + (jogador_altura // 9 * i), jogador_largura, jogador_altura // 9))
-            # print(p1)
-            pygame.draw.rect(tela,(0, 50+i*20, 255 - 20*i), p1[i])
+    
+        # Desenhando objetos
+        p1 = desenha_jogador(p1_x, p1_y)
+        p2 = desenha_jogador(p2_x, p2_y)
+        pygame.draw.rect(tela, white, bolinha)
         
         # Movimento jogadores
         keys_pressed = pygame.key.get_pressed()
@@ -131,39 +140,32 @@ def main():
             p1_y -= VEL
         if keys_pressed[pygame.K_s] and p1_y <= ALTURA - abs(VEL):
             p1_y += VEL
-        if keys_pressed[pygame.K_UP] and p2.y >= abs(VEL) - jogador_altura:
-            p2.y -= VEL
-        if keys_pressed[pygame.K_DOWN] and p2.y <= ALTURA - abs(VEL):
-            p2.y += VEL
+        if keys_pressed[pygame.K_UP] and p2_y >= abs(VEL) - jogador_altura:
+            p2_y -= VEL
+        if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL):
+            p2_y += VEL
 
         if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
             main()
         
-        # Desenhando objetos
-        # pygame.draw.rect(tela, white, p1)
-        pygame.draw.rect(tela, white, p2)
-        pygame.draw.rect(tela, white, bolinha)
-
         # Colisão bolinha com jogadores
-        if bolinha_vel_x < 0:  
+        if bolinha_vel_x < 0:  # p1
             for i in range(9):  # 0 1 2 3 4 5 6 7 8
                 if p1[i].colliderect(bolinha):
-                    bolinha_vel_y = i-4  # -4 -3 -2 -1 
+                    bolinha_vel_y = i-4  # -4 -3 -2 -1 0 1 2 3 4
                     bolinha_vel_x = bolinha_vel - abs(bolinha_vel_y) # 5 - y
                     paddle_sound.play()
                     print(bolinha_vel_x, bolinha_vel_y)
                     break
 
-        # elif p2.colliderect(bolinha) and bolinha_vel_x > 0:
-        #     bolinha_vel_x *= -1
-        #     bolinha_vel_x -= 1
-        #     if bolinha_vel_y < 0:
-        #         bolinha_vel_y -= 1
-        #     else:
-        #         bolinha_vel_y += 1
-        #     paddle_sound.play()
-
-            # print(f"p2 - {bolinha_vel_y}")
+        elif bolinha_vel_x > 0:  # p2
+            for i in range(9):  # 0 1 2 3 4 5 6 7 8
+                if p2[i].colliderect(bolinha):
+                    bolinha_vel_y = i-4  # -4 -3 -2 -1 0 1 2 3 4
+                    bolinha_vel_x = -(bolinha_vel - abs(bolinha_vel_y)) # 5 - y
+                    paddle_sound.play()
+                    print(bolinha_vel_x, bolinha_vel_y)
+                    break
 
         # Colisão bolinha com tela
         if bolinha.y <= 0 or bolinha.y >= ALTURA - tam_bolinha:
@@ -207,3 +209,6 @@ if __name__ == "__main__":
 
 # pyi-makespec.exe --onefile --icon="img/pong-icon.ico" --noconsole .\pong.py
 # pyinstaller.exe .\pong.spec
+
+# FAZER:
+# COLOCAR OUTROS PARÂMETROS: AUMENTAR A VELOCIDADE EM CADA BATIDA DA BOLA NA RAQUETE, INCLINAÇÃO MAXIMA, VELOCIDADE DIFERENTE DE 5, FUNÇÃO PARA VERIFICAR A COLISÃO DE AMBOS OS JOGADORES
