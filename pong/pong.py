@@ -99,7 +99,7 @@ def main():
     tam_bolinha = 12
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    bolinha_vel = 5
+    bolinha_vel = bolinha_vel_init = 10
     # vel_x_init = bolinha_vel_x = randint(2, bolinha_vel)  * choice([-1, 1])
     # vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
     vel_x_init = bolinha_vel_x = -5
@@ -152,8 +152,9 @@ def main():
         if bolinha_vel_x < 0:  # p1
             for i in range(9):  # 0 1 2 3 4 5 6 7 8
                 if p1[i].colliderect(bolinha):
-                    bolinha_vel_y = i-4  # -4 -3 -2 -1 0 1 2 3 4
-                    bolinha_vel_x = bolinha_vel - abs(bolinha_vel_y) # 5 - y
+                    bolinha_vel += 1
+                    bolinha_vel_y = ((i-4) * bolinha_vel) / 5  # Se bolinha_vel = 5, então y = -4 -3 -2 -1 0 1 2 3 4
+                    bolinha_vel_x = bolinha_vel - abs(bolinha_vel_y) 
                     paddle_sound.play()
                     print(bolinha_vel_x, bolinha_vel_y)
                     break
@@ -161,8 +162,9 @@ def main():
         elif bolinha_vel_x > 0:  # p2
             for i in range(9):  # 0 1 2 3 4 5 6 7 8
                 if p2[i].colliderect(bolinha):
-                    bolinha_vel_y = i-4  # -4 -3 -2 -1 0 1 2 3 4
-                    bolinha_vel_x = -(bolinha_vel - abs(bolinha_vel_y)) # 5 - y
+                    bolinha_vel += 1
+                    bolinha_vel_y = ((i-4) * bolinha_vel) / 5 
+                    bolinha_vel_x = -(bolinha_vel - abs(bolinha_vel_y)) 
                     paddle_sound.play()
                     print(bolinha_vel_x, bolinha_vel_y)
                     break
@@ -191,6 +193,7 @@ def main():
             bolinha.x = LARGURA // 2 - tam_bolinha // 2
             bolinha_vel_x = vel_x_init
             bolinha_vel_y = vel_y_init
+            bolinha_vel = bolinha_vel_init
 
         # Game over
         if pontos_p1 == 10:
@@ -211,4 +214,4 @@ if __name__ == "__main__":
 # pyinstaller.exe .\pong.spec
 
 # FAZER:
-# COLOCAR OUTROS PARÂMETROS: AUMENTAR A VELOCIDADE EM CADA BATIDA DA BOLA NA RAQUETE, INCLINAÇÃO MAXIMA, VELOCIDADE DIFERENTE DE 5, FUNÇÃO PARA VERIFICAR A COLISÃO DE AMBOS OS JOGADORES
+# COLOCAR OUTROS PARÂMETROS: INCLINAÇÃO MAXIMA, FUNÇÃO PARA VERIFICAR A COLISÃO DE AMBOS OS JOGADORES
