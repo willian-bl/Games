@@ -96,14 +96,15 @@ def main():
     p2 = pygame.Rect(p2_x, p2_y, jogador_largura, jogador_altura)
 
     # Bolinha
-    tam_bolinha = 12
+    tam_bolinha = 10
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
     bolinha_vel = bolinha_vel_init = 10
     # vel_x_init = bolinha_vel_x = randint(2, bolinha_vel)  * choice([-1, 1])
     # vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
-    vel_x_init = bolinha_vel_x = -5
+    vel_x_init = bolinha_vel_x = -10
     vel_y_init = bolinha_vel_y = 0
+    inclinacao_maxima = 3  # Deve ser menor do que a velocidade da bolinha
     bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
 
     
@@ -154,6 +155,8 @@ def main():
                 if p1[i].colliderect(bolinha):
                     bolinha_vel += 1
                     bolinha_vel_y = ((i-4) * bolinha_vel) / 5  # Se bolinha_vel = 5, então y = -4 -3 -2 -1 0 1 2 3 4
+                    if inclinacao_maxima < bolinha_vel:
+                        bolinha_vel_y = bolinha_vel_y * inclinacao_maxima / 4
                     bolinha_vel_x = bolinha_vel - abs(bolinha_vel_y) 
                     paddle_sound.play()
                     print(bolinha_vel_x, bolinha_vel_y)
@@ -164,6 +167,8 @@ def main():
                 if p2[i].colliderect(bolinha):
                     bolinha_vel += 1
                     bolinha_vel_y = ((i-4) * bolinha_vel) / 5 
+                    if inclinacao_maxima < bolinha_vel:
+                        bolinha_vel_y = bolinha_vel_y * inclinacao_maxima / 4
                     bolinha_vel_x = -(bolinha_vel - abs(bolinha_vel_y)) 
                     paddle_sound.play()
                     print(bolinha_vel_x, bolinha_vel_y)
@@ -214,4 +219,4 @@ if __name__ == "__main__":
 # pyinstaller.exe .\pong.spec
 
 # FAZER:
-# COLOCAR OUTROS PARÂMETROS: INCLINAÇÃO MAXIMA, FUNÇÃO PARA VERIFICAR A COLISÃO DE AMBOS OS JOGADORES
+# FUNÇÃO PARA VERIFICAR A COLISÃO DE AMBOS OS JOGADORES
