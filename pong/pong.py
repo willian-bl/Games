@@ -11,7 +11,7 @@ root = os.path.dirname(__file__)
 LARGURA = 980
 ALTURA = 640
 FPS = 60
-VEL = 8
+VEL_JOG = 10
 TAM_LINHA = 8
 
 # Iniciando Pygame
@@ -29,7 +29,6 @@ tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption('Pong')
 pygame.display.set_icon(icon)
 
-
 # Funções
 def desenha_campo():
     linha_x = LARGURA // 2 - TAM_LINHA // 2
@@ -44,7 +43,7 @@ def desenha_jogador(jog_x, jog_y):
     for i in range(9):
         jog.append(pygame.Rect(jog_x, jog_y + (jogador_altura // 9 * i), jogador_largura, jogador_altura // 9))
         # print(p1)
-        pygame.draw.rect(tela,(0, 50+i*20, 255 - 20*i), jog[i])
+        pygame.draw.rect(tela, white, jog[i])
     return jog
 
 
@@ -84,13 +83,15 @@ def game_over(vencedor):
 
 
 def main():
-    global VEL, jogador_altura, jogador_largura
+    global VEL_JOG, jogador_altura, jogador_largura
     # Jogador
     jogador_largura = 12
     jogador_altura = 9 * 10
     p1_x = 40
     p2_x = LARGURA - p1_x - jogador_largura
     p1_y = p2_y = ALTURA // 2 - jogador_altura // 2
+    pontos_p1 = pontos_p2 = 0
+    vencedor = 0
 
     p1 = pygame.Rect(p1_x, p1_y, jogador_largura, jogador_altura)
     p2 = pygame.Rect(p2_x, p2_y, jogador_largura, jogador_altura)
@@ -99,19 +100,13 @@ def main():
     tam_bolinha = 10
     bolinha_x = LARGURA // 2 - tam_bolinha // 2
     bolinha_y = ALTURA // 2 - tam_bolinha // 2
-    bolinha_vel = bolinha_vel_init = 10
-    # vel_x_init = bolinha_vel_x = randint(2, bolinha_vel)  * choice([-1, 1])
-    # vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
-    vel_x_init = bolinha_vel_x = -10
-    vel_y_init = bolinha_vel_y = 0
+    bolinha_vel = bolinha_vel_init = 8
     inclinacao_maxima = 3  # Deve ser menor do que a velocidade da bolinha
-    bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
 
+    vel_x_init = bolinha_vel_x = randint(inclinacao_maxima, bolinha_vel)  * choice([-1, 1])
+    vel_y_init = bolinha_vel_y = (bolinha_vel - abs(bolinha_vel_x))  * choice([-1, 1])
     
-    print(bolinha_vel_x, bolinha_vel_y)
-
-    vencedor = 0
-    pontos_p1 = pontos_p2 = 0
+    bolinha = pygame.Rect(bolinha_x, bolinha_y, tam_bolinha, tam_bolinha)
 
     clock = pygame.time.Clock()
     while True:  # Loop principal
@@ -137,17 +132,17 @@ def main():
         
         # Movimento jogadores
         keys_pressed = pygame.key.get_pressed()
-        if keys_pressed[pygame.K_w] and p1_y >= abs(VEL) - jogador_altura:
-            p1_y -= VEL
-        if keys_pressed[pygame.K_s] and p1_y <= ALTURA - abs(VEL):
-            p1_y += VEL
-        if keys_pressed[pygame.K_UP] and p2_y >= abs(VEL) - jogador_altura:
-            p2_y -= VEL
-        if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL):
-            p2_y += VEL
+        if keys_pressed[pygame.K_w] and p1_y >= abs(VEL_JOG) - jogador_altura:
+            p1_y -= VEL_JOG
+        if keys_pressed[pygame.K_s] and p1_y <= ALTURA - abs(VEL_JOG):
+            p1_y += VEL_JOG
+        if keys_pressed[pygame.K_UP] and p2_y >= abs(VEL_JOG) - jogador_altura:
+            p2_y -= VEL_JOG
+        if keys_pressed[pygame.K_DOWN] and p2_y <= ALTURA - abs(VEL_JOG):
+            p2_y += VEL_JOG
 
-        if keys_pressed[pygame.K_SPACE]:  # PROVISÓRIO - Para resetar o jogo. Ver se pode deixar
-            main()
+        # if keys_pressed[pygame.K_SPACE]:  # Para resetar o jogo
+        #     main()
         
         # Colisão bolinha com jogadores
         if bolinha_vel_x < 0:  # p1
@@ -159,7 +154,6 @@ def main():
                         bolinha_vel_y = bolinha_vel_y * inclinacao_maxima / 4
                     bolinha_vel_x = bolinha_vel - abs(bolinha_vel_y) 
                     paddle_sound.play()
-                    print(bolinha_vel_x, bolinha_vel_y)
                     break
 
         elif bolinha_vel_x > 0:  # p2
@@ -171,7 +165,6 @@ def main():
                         bolinha_vel_y = bolinha_vel_y * inclinacao_maxima / 4
                     bolinha_vel_x = -(bolinha_vel - abs(bolinha_vel_y)) 
                     paddle_sound.play()
-                    print(bolinha_vel_x, bolinha_vel_y)
                     break
 
         # Colisão bolinha com tela
@@ -183,16 +176,16 @@ def main():
         bolinha.x += bolinha_vel_x
         bolinha.y += bolinha_vel_y
 
-        marcou = False
         # Contabilizando pontos
+        marcou = False
         if bolinha.x < 0:
             pontos_p2 += 1
             marcou = True
             score_sound.play()
         elif bolinha.x + tam_bolinha > LARGURA:
-            score_sound.play()
             pontos_p1 += 1
             marcou = True
+            score_sound.play()
         
         if marcou:
             bolinha.x = LARGURA // 2 - tam_bolinha // 2
@@ -217,6 +210,3 @@ if __name__ == "__main__":
 
 # pyi-makespec.exe --onefile --icon="img/pong-icon.ico" --noconsole .\pong.py
 # pyinstaller.exe .\pong.spec
-
-# FAZER:
-# FUNÇÃO PARA VERIFICAR A COLISÃO DE AMBOS OS JOGADORES
