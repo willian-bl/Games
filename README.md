@@ -8,7 +8,7 @@ Treinar lógica de programação e programar com Python recriando alguns jogos c
 ## Lista de jogos
 ### Completos
 - Snake Game (mais conhecido como "Jogo da Cobrinha")
-- Pong - Em desenvolvimento
+- Pong
 
 ### Planejados
 - Tetris
