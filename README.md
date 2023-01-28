@@ -11,7 +11,7 @@ Treinar lógica de programação e programar com Python recriando alguns jogos c
 - Pong
 
 ### Planejados
-- Tetris
+- Tetris (Em desenvolvimento)
 - Brick breaker (também conhecido como brick out)
 
 ## Um pouco mais sobre...
